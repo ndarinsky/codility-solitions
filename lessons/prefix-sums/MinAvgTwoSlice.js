@@ -29,26 +29,26 @@ function getSliceTotal(x,y) {
     }
 }
 
+/**
+ * Solution based on the following fact, which was proved:
+ * Every slice must be of size two or three.
+ * Slices of bigger sizes are created from such smaller slices. 
+ * @param {*} input 
+ */
 function solution(input) {
-    calculatePrefix(input)
-    console.log(prefix)
-    
-    let flag = true
-    let minAvg = 0
+    let minValue = 10001
     let minIndex = 0
-    let length = -1
-    for (let i=0; i<input.length; i++) {
-        for (let j=i+1; j<input.length; j++) {
-            let avg = getSliceTotal(i,j)/(j-i+1)
-            if (flag || avg<minAvg || (avg===minAvg && (j-i+1)<length)){
-                flag = false
-                minAvg = avg
-                minIndex = i
-                length = (j-i+1)
-            }
+    for (let i=0; i<input.length-1; i++) {
+        if ((input[i] + input[i+1])/2.0 < minValue){
+            minIndex = i
+            minValue = (input[i] + input[i+1])/2.0
+        }
+        if (i < input.length-2 && (input[i] + input[i+1] + input[i+2])/3.0 < minValue){
+            minIndex = i
+            minValue = (input[i] + input[i+1] + input[i+2])/3.0
         }
     }
     return minIndex
 }
 
-console.log(solution(input))
+// console.log(solution(input))
