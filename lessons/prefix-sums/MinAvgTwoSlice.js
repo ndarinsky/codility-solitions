@@ -10,29 +10,45 @@ function getAvg(arr) {
     return sum/arr.length
 }
 
+const prefix = []
+function calculatePrefix(input) {
+    for(let i=0; i<input.length; i++) {
+        if (i===0) {
+            prefix.push(input[i])
+        } else {
+            prefix.push(input[i]+prefix[i-1])
+        }
+    }
+}
+
+function getSliceTotal(x,y) {
+    if (x > 0) 
+        return prefix[y]-prefix[x-1]
+    if (x <= 0) {
+        return prefix[y]
+    }
+}
+
 function solution(input) {
-    let minSlice = null
+    calculatePrefix(input)
+    console.log(prefix)
+    
+    let flag = true
     let minAvg = 0
     let minIndex = 0
+    let length = -1
     for (let i=0; i<input.length; i++) {
         for (let j=i+1; j<input.length; j++) {
-            if(!minSlice) {
-                minSlice = input.slice(i,j+1)
-                minAvg = getAvg(minSlice)
+            let avg = getSliceTotal(i,j)/(j-i+1)
+            if (flag || avg<minAvg || (avg===minAvg && (j-i+1)<length)){
+                flag = false
+                minAvg = avg
                 minIndex = i
+                length = (j-i+1)
             }
-            slice = input.slice(i,j+1)
-            avg = getAvg(slice)
-            // if (input[j+1]>avg) {
-                if (avg<minAvg || (avg===minAvg && slice.length === minSlice.length)){
-                    minSlice = slice
-                    minAvg = avg
-                    minIndex = i
-                }
-            // }
         }
     }
     return minIndex
 }
 
-console.log(solution(input3))
+console.log(solution(input))
